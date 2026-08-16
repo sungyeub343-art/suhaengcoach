@@ -13,6 +13,14 @@
     .image-frame { overflow: hidden; }
     .note-top { right: 16px; }
     .note-bottom { left: 16px; }
+    .reviews { background: #f0f2eb; }
+    .review-list { display: grid; gap: 14px; }
+    .review-card { padding: 25px 28px; background: var(--paper); border-top: 2px solid var(--ink); }
+    .review-card blockquote { margin: 0; font-family: var(--display); font-size: 20px; line-height: 1.55; letter-spacing: -.05em; }
+    .review-card footer { display: flex; align-items: center; gap: 12px; padding: 18px 0 0; margin-top: 19px; border-top: 1px solid var(--line); background: transparent; }
+    .review-card footer strong { font-size: 12px; }
+    .review-card footer span { color: var(--muted); font-size: 11px; }
+    @media(max-width:760px) { .review-card { padding: 22px; } .review-card blockquote { font-size: 18px; } }
   </style>
 </head>
 <body>
@@ -25,6 +33,7 @@
       <a href="#solution">설치 솔루션</a>
       <a href="#process">진행 과정</a>
       <a href="#cases">설치 사례</a>
+      <a href="#reviews">설치 후기</a>
       <a href="#consult">상담 문의</a>
     </nav>
     <button class="menu-toggle" type="button" aria-label="메뉴 열기" aria-expanded="false">☰</button>
@@ -78,6 +87,15 @@
     <section id="cases" class="cases section-grid">
       <div class="section-intro reveal"><p class="eyebrow"><span></span> RECENT SPACES</p><h2>어떤 공간도<br><em>가게가 될 수 있어요.</em></h2><a class="text-link" href="#consult">설치 사례 더 보기 <span>→</span></a></div>
       <div class="case-grid reveal reveal-delay"><article class="case-card case-large"><img src="https://images.unsplash.com/photo-1556740749-887f6717d7e4?auto=format&fit=crop&w=900&q=85" alt="사무실 라운지 공간에 설치된 판매 공간"><div><span>OFFICE LOUNGE</span><h3>일하는 사람들의<br>가장 가까운 편의점</h3></div></article><article class="case-card"><img src="https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&fit=crop&w=700&q=85" alt="상품이 진열된 매장 선반"><div><span>FITNESS CENTER</span><h3>운동 전후의<br>건강한 한 끼</h3></div></article><article class="case-card"><img src="https://images.unsplash.com/photo-1517048676732-d65bc937f952?auto=format&fit=crop&w=700&q=85" alt="공용 라운지 공간"><div><span>COMMUNITY SPACE</span><h3>머무는 공간에<br>새로운 리듬</h3></div></article></div>
+    </section>
+
+    <section id="reviews" class="reviews section-grid">
+      <div class="section-intro reveal"><p class="eyebrow"><span></span> CUSTOMER REVIEWS</p><h2>설치하고 나서야<br><em>달라진 점이 보여요.</em></h2><p class="hero-lede">공간을 사용하는 사람들의 작은 불편을 줄이고,<br>운영하는 분들의 일상에도 여유를 더했습니다.</p></div>
+      <div class="review-list reveal reveal-delay">
+        <article class="review-card"><blockquote>“직원들이 점심시간마다 밖에 나가지 않아도 돼서 만족도가 높아요. 처음부터 상품 구성을 같이 고민해주신 덕분에 재고도 안정적으로 돌아갑니다.”</blockquote><footer><strong>김OO 사장님</strong><span>서울 오피스 라운지 · 음료/간식</span></footer></article>
+        <article class="review-card"><blockquote>“헬스장 회원분들이 운동 전후에 간단히 챙겨 드실 수 있어 좋아요. 설치 과정이 빠르고 깔끔해서 영업 중에도 부담이 없었습니다.”</blockquote><footer><strong>박OO 매니저</strong><span>경기 피트니스 센터 · 건강 간편식</span></footer></article>
+        <article class="review-card"><blockquote>“비어 있던 로비 한쪽이 자연스럽게 이용되는 공간이 됐어요. 재고 확인과 보충 동선까지 안내받아 처음 운영하는데도 어렵지 않았습니다.”</blockquote><footer><strong>이OO 대표님</strong><span>부산 공유오피스 · 생활용품/음료</span></footer></article>
+      </div>
     </section>
 
     <section id="consult" class="consult section-grid">
