@@ -28,3 +28,4 @@ foreach ($slug in $regions.Keys) {
   }
 }
 Write-Output "Generated $count pages"
+python add_regional_keywords.py

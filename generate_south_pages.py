@@ -1,4 +1,5 @@
 from pathlib import Path
+from subprocess import run
 
 regions = {
     'chungnam': ('\ucda9\ub0a8', '\ucc9c\uc548\uc2dc,\uacf5\uc8fc\uc2dc,\ubcf4\ub839\uc2dc,\uc544\uc0b0\uc2dc,\uc11c\uc0b0\uc2dc,\ub17c\uc0b0\uc2dc,\uacc4\ub8e1\uc2dc,\ub2f9\uc9c4\uc2dc,\uae08\uc0b0\uad70,\ubd80\uc5ec\uad70,\uc11c\ucc9c\uad70,\uccad\uc591\uad70,\ud64d\uc131\uad70,\uc608\uc0b0\uad70,\ud0dc\uc548\uad70'.split(',')),
@@ -15,3 +16,4 @@ for group, (region, areas) in regions.items():
         path.write_text(template.format(region=region, area=area, group=group), encoding='utf-8')
         count += 1
 print(f'Generated {count} pages')
+run(["python", "add_regional_keywords.py"], check=True)
