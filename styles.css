@@ -1,3 +1,4 @@
+ .brand-mark{background-color:var(--ink)!important;background-image:url("logo.svg")!important;background-size:cover!important;color:transparent!important;font-size:0!important}
  .hero-actions{flex-wrap:wrap}.button-phone{border:1px solid var(--ink);background:transparent;color:var(--ink)}.button-phone:hover{background:var(--lime)}
 @media(max-width:760px){.site-header .header-call{display:flex;gap:5px;font-size:10px;white-space:nowrap}.site-header .header-call b{width:25px;height:25px;font-size:15px}.site-header{gap:8px}.site-header .brand{margin-right:auto}.site-header .brand small{font-size:7px}}
 textarea{display:block;width:100%;border:0;border-bottom:1px solid #bdc6bd;background:transparent;padding:9px 0;font:500 13px var(--body);color:var(--ink);outline:0;resize:vertical;min-height:62px;line-height:1.5}textarea:focus{border-color:var(--ink)}

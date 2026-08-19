@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-labelledby="title desc">
+  <title id="title">수행코치 로고</title>
+  <desc id="desc">자판기 슬롯과 S를 결합한 수행코치 심볼</desc>
+  <rect width="128" height="128" rx="64" fill="#19231f"/>
+  <path d="M35 38h58v11H35z" fill="#d4e36d"/>
+  <path d="M35 55h58v11H35z" fill="#d4e36d"/>
+  <path d="M35 72h38c11 0 20 7 20 17s-9 17-20 17H35V95h38c4 0 8-2 8-6s-4-6-8-6H35z" fill="#d4e36d"/>
+  <path d="M35 21h58v8H35z" fill="#b5c5ad" opacity=".7"/>
+</svg>
