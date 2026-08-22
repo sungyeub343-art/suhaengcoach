@@ -7,7 +7,22 @@ REGIONS = {
     "busan": "부산", "chungbuk": "충북", "chungnam": "충남", "daegu": "대구",
     "daejeon": "대전", "gangwon": "강원", "gwangju": "광주", "gyeongbuk": "경북",
     "incheon": "인천", "jeju": "제주", "jeonbuk": "전북", "jeonnam": "전남",
-    "sejong": "세종", "ulsan": "울산",
+    "sejong": "세종", "ulsan": "울산", "seoul": "서울", "gyeonggi": "경기", "gyeongnam": "경남",
+}
+EXTRA_AREAS = {
+    "seoul": {
+        "강남구": "gangnamgu", "강동구": "gangdonggu", "강북구": "gangbukgu", "강서구": "gangseogu", "관악구": "gwanakgu",
+        "광진구": "gwangjingu", "구로구": "gurogu", "금천구": "geumcheongu", "노원구": "nowongu", "도봉구": "dobonggu",
+        "동대문구": "dongdaemungu", "동작구": "dongjakgu", "마포구": "mapogu", "서대문구": "seodaemungu", "서초구": "seochogu",
+        "성동구": "seongdonggu", "성북구": "seongbukgu", "송파구": "songpagu", "양천구": "yangcheongu", "영등포구": "yeongdeungpogu",
+        "용산구": "yongsangu", "은평구": "eunpyeonggu", "종로구": "jongnogu", "중구": "junggu", "중랑구": "jungnanggu",
+    },
+    "gyeonggi": {
+        "가평군": "gapyeong", "고양시": "goyang", "과천시": "gwacheon", "광명시": "gwangmyeong", "광주시": "gwangju", "구리시": "guri", "군포시": "gunpo", "김포시": "gimpo", "남양주시": "namyangju", "동두천시": "dongducheon", "부천시": "bucheon", "성남시": "seongnam", "수원시": "suwon", "시흥시": "siheung", "안산시": "ansan", "안성시": "anseong", "안양시": "anyang", "양주시": "yangju", "양평군": "yangpyeong", "여주시": "yeoju", "연천군": "yeoncheon", "오산시": "osan", "용인시": "yongin", "의왕시": "uiwang", "의정부시": "uijeongbu", "이천시": "icheon", "파주시": "paju", "평택시": "pyeongtaek", "포천시": "pocheon", "하남시": "hanam", "화성시": "hwaseong",
+    },
+    "gyeongnam": {
+        "거제시": "geoje", "거창군": "geochang", "고성군": "goseong", "김해시": "gimhae", "남해군": "namhae", "밀양시": "miryang", "사천시": "sacheon", "산청군": "sancheong", "양산시": "yangsan", "의령군": "uiryeong", "진주시": "jinju", "창녕군": "changnyeong", "창원시": "changwon", "통영시": "tongyeong", "하동군": "hadong", "함안군": "haman", "함양군": "hamyang", "합천군": "hapcheon",
+    },
 }
 PRODUCTS = [
     ("이동식 카드단말기", "행사장·플리마켓·방문 판매처럼 장소가 바뀌는 현장에서 빠르게 결제할 수 있는 휴대형 단말기"),
@@ -36,7 +51,7 @@ def product_cards():
 def region_cards():
     cards = []
     for group, region in REGIONS.items():
-        area_count = len(list((ROOT / "regions" / group).glob("*/index.html")))
+        area_count = len(EXTRA_AREAS.get(group, {})) or len(list((ROOT / "regions" / group).glob("*/index.html")))
         cards.append(
             f'<a class="region-card" href="{group}/"><span><b>{region} 단말기 설치</b>'
             f'<small>{area_count}개 시·군·구별 상담 안내</small></span><span>↗</span></a>'
@@ -57,6 +72,8 @@ output.mkdir(exist_ok=True)
 created = 0
 for group, region in REGIONS.items():
     source_dirs = sorted((ROOT / "regions" / group).glob("*/"))
+    if group in EXTRA_AREAS:
+        source_dirs = []
     areas = []
     for source_dir in source_dirs:
         source = source_dir / "index.html"
@@ -64,6 +81,12 @@ for group, region in REGIONS.items():
             continue
         slug = source_dir.name
         area = area_name(source.read_text(encoding="utf-8-sig"))
+        target = output / group / slug
+        target.mkdir(parents=True, exist_ok=True)
+        (target / "index.html").write_text(page.format(region=region, area=area, products=product_cards()), encoding="utf-8")
+        areas.append(f'<a class="region-card" href="{slug}/"><span><b>{escape(area)} 단말기</b><small>{escape(area)} 판매·설치 안내</small></span><span>↗</span></a>')
+        created += 1
+    for area, slug in EXTRA_AREAS.get(group, {}).items():
         target = output / group / slug
         target.mkdir(parents=True, exist_ok=True)
         (target / "index.html").write_text(page.format(region=region, area=area, products=product_cards()), encoding="utf-8")
