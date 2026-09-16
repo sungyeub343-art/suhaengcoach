@@ -1,16 +1,43 @@
+import os
 import re
 from pathlib import Path
 
+ROOT = Path(__file__).resolve().parent
 MARKER = "keyword-guide"
+GUIDE_IMAGE = "자판기_통합.png"
+GUIDE_SECTION_PATTERN = re.compile(
+    r'<section[^>]*aria-label="스마트 벤딩머신 종합 안내"[^>]*>.*?자판기_통합\.png.*?</section>',
+    re.DOTALL,
+)
 KEYWORD_TEXT = "스마트 무인판매기 설치를 검토하신다면 지역과 공간의 이용 패턴에 맞춰 상품 구성, 설치 위치, 결제 방식과 운영 동선을 함께 설계합니다. 호텔 자판기는 로비와 객실층에 필요한 음료·간식·여행용품을 편리하게 제공하고, 병원 자판기는 보호자와 방문객이 필요한 음료·간편식·생활용품을 쉽게 찾도록 구성합니다. 골프장 자판기는 라운딩 전후의 음료·간식과 골프용품을 중심으로, 디저트 자판기는 카페와 휴게 공간의 이용 시간에 맞춘 디저트 상품을 중심으로 제안합니다. 또한 생활용품 자판기는 아파트·오피스·학교 등 생활권 공간에 필요한 소모품을, 세차용품 자판기는 주유소·세차장 이용객에게 필요한 세정용품과 관리용품을 빠르게 제공하도록 운영합니다. 공간 규모와 예상 수요에 따라 음료 자판기, 간식 자판기, 냉장 자판기부터 여러 상품군을 한 기기에 구성하는 멀티자판기까지 안내하며, 재고 보충과 매출 확인이 편리한 무인자판기 운영을 지원합니다."
 KEYWORD_SECTION = f'''<section class="section keyword-guide"><div class="section-head"><div><p class="eyebrow"><span></span> VENDING SOLUTION</p><h2>공간별 자판기 설치·운영<br><em>맞춤 상담 안내</em></h2></div><p>{KEYWORD_TEXT}</p></div></section>'''
 REDIRECT_KEYWORD_SECTION = f'''<section class="keyword-guide"><h2>공간별 자판기 설치·운영 상담 안내</h2><p>{KEYWORD_TEXT}</p></section>'''
 
 updated = 0
-for path in Path("regions").rglob("*.html"):
+for path in (ROOT / "regions").rglob("*.html"):
     html = path.read_text(encoding="utf-8-sig")
     original_html = html
-    if "<main>" not in html:
+    if "<main>" in html:
+        image_path = Path(os.path.relpath(ROOT / GUIDE_IMAGE, path.parent)).as_posix()
+        guide_section = (
+            '<section class="section" aria-label="스마트 벤딩머신 종합 안내">'
+            f'<img src="{image_path}" '
+            'alt="스마트 벤딩머신의 장점, 기능과 실제 설치 사례 종합 안내" '
+            'loading="lazy" decoding="async" '
+            'style="display:block;width:100%;max-width:900px;height:auto;margin:0 auto;">'
+            '</section>'
+        )
+        if GUIDE_IMAGE in html:
+            html, guide_count = GUIDE_SECTION_PATTERN.subn(guide_section, html, count=1)
+            if guide_count != 1:
+                raise RuntimeError(f"Could not normalize guide image in {path}")
+        else:
+            hero_end = html.find("</section>", html.find("<main>"))
+            if hero_end == -1:
+                continue
+            insertion_point = hero_end + len("</section>")
+            html = html[:insertion_point] + guide_section + html[insertion_point:]
+    else:
         html = html.replace(
             '<meta name="robots" content="index,follow">',
             '<meta name="robots" content="noindex,follow">',

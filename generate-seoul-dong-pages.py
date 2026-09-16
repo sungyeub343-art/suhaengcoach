@@ -3,6 +3,8 @@ import json
 from pathlib import Path
 import re
 import shutil
+from subprocess import run
+import sys
 from urllib.request import urlopen
 
 
@@ -30,6 +32,15 @@ LEGACY_SEODAEMUN_SLUGS = (
 
 ROOT = Path(__file__).resolve().parent
 DISTRICT_PAGE = ROOT / "regions" / "seoul-district.html"
+DOBONG_GUIDE_SECTION = (
+    '<section class="section" id="dobongVendingGuide" '
+    'aria-label="스마트 벤딩머신 종합 안내" hidden>'
+    '<img src="../자판기_통합.png" '
+    'alt="스마트 벤딩머신의 장점, 기능과 실제 설치 사례 종합 안내" '
+    'loading="lazy" decoding="async" '
+    'style="display:block;width:100%;height:auto;margin:0 auto;">'
+    '</section>'
+)
 
 
 def load_seoul_dongs():
@@ -93,6 +104,15 @@ def build_solution_section(district, dong=None):
 
 def update_district_page(districts):
     html = DISTRICT_PAGE.read_text(encoding="utf-8")
+    if 'id="dobongVendingGuide"' not in html:
+        marker = '</section><!-- VENDING CONTENT START -->'
+        if marker not in html:
+            raise RuntimeError("Could not find Dobong guide insertion point")
+        html = html.replace(
+            marker,
+            f'</section>{DOBONG_GUIDE_SECTION}<!-- VENDING CONTENT START -->',
+            1,
+        )
     if 'gyeonggi-content.css' not in html:
         html = html.replace('</head>', '<link rel="stylesheet" href="../gyeonggi-content.css"></head>', 1)
     html, solution_count = re.subn(
@@ -133,6 +153,8 @@ def update_district_page(districts):
         '<script>const area=new URLSearchParams(location.search).get("area")||"서울";'
         'document.title=area+" 스마트무인자판기 설치 안내 | 수행코치";'
         'document.querySelectorAll("#areaName,#areaHeading,#areaCallout,.solutionAreaName").forEach(element=>{element.textContent=area;});'
+        'const dobongGuide=document.querySelector("#dobongVendingGuide");'
+        'if(dobongGuide&&area==="도봉구"){dobongGuide.hidden=false;}'
         f'const seoulDongs={json.dumps(navigation, ensure_ascii=False, separators=(",", ":"))};'
         'const selected=seoulDongs[area];if(selected){'
         'document.querySelector("#dongDistrictName").textContent=area;'
@@ -194,4 +216,5 @@ def generate_pages(districts):
 districts = load_seoul_dongs()
 update_district_page(districts)
 created = generate_pages(districts)
+run([sys.executable, str(ROOT / "add_regional_keywords.py")], check=True)
 print(f"Updated Seoul navigation and generated {created} pages across {len(districts)} districts.")

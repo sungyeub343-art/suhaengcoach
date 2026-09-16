@@ -2,6 +2,8 @@ from collections import defaultdict
 import json
 from pathlib import Path
 import re
+from subprocess import run
+import sys
 from urllib.request import urlopen
 
 
@@ -198,4 +200,5 @@ def generate_pages(cities):
 localities_by_city = load_localities()
 update_city_pages(localities_by_city)
 created = generate_pages(localities_by_city)
+run([sys.executable, str(ROOT / "add_regional_keywords.py")], check=True)
 print(f"Updated 31 Gyeonggi city pages and generated {created} locality pages.")
