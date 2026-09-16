@@ -9,16 +9,15 @@ REDIRECT_KEYWORD_SECTION = f'''<section class="keyword-guide"><h2>공간별 자�
 updated = 0
 for path in Path("regions").rglob("*.html"):
     html = path.read_text(encoding="utf-8-sig")
-    if MARKER in html:
-        section = KEYWORD_SECTION if "<main>" in html else REDIRECT_KEYWORD_SECTION
-        replacement, count = re.subn(
-            r'<section class="(?:section )?keyword-guide">.*?</section>',
-            section,
-            html,
-            flags=re.DOTALL,
+    original_html = html
+    if "<main>" not in html:
+        html = html.replace(
+            '<meta name="robots" content="index,follow">',
+            '<meta name="robots" content="noindex,follow">',
         )
-        if count and replacement != html:
-            path.write_text(replacement, encoding="utf-8")
+    if MARKER in html:
+        if html != original_html:
+            path.write_text(html, encoding="utf-8")
             updated += 1
         continue
 
