@@ -172,16 +172,25 @@ def generate_pages(cities):
         for locality in localities:
             page_path = REGIONS_DIR / "gyeonggi" / city_slug / locality["code"] / "index.html"
             page_path.parent.mkdir(parents=True, exist_ok=True)
-            page_path.write_text(
-                PAGE_TEMPLATE.format(
-                    city=city,
-                    city_slug=city_slug,
-                    locality=locality["name"],
-                    code=locality["code"],
-                    solution_section=build_solution_section(city, locality["name"]),
-                ),
-                encoding="utf-8",
+            page_html = PAGE_TEMPLATE.format(
+                city=city,
+                city_slug=city_slug,
+                locality=locality["name"],
+                code=locality["code"],
+                solution_section=build_solution_section(city, locality["name"]),
             )
+            if locality["code"] == "4139051000":
+                page_html = page_html.replace(
+                    '</section><!-- VENDING CONTENT START -->',
+                    '</section><section class="section" aria-label="스마트 벤딩머신 종합 안내">'
+                    '<img src="../../../../자판기_통합.png" '
+                    'alt="스마트 벤딩머신의 장점, 기능과 실제 설치 사례 종합 안내" '
+                    'loading="lazy" decoding="async" '
+                    'style="display:block;width:100%;height:auto;margin:0 auto;">'
+                    '</section><!-- VENDING CONTENT START -->',
+                    1,
+                )
+            page_path.write_text(page_html, encoding="utf-8")
             created += 1
     return created
 
