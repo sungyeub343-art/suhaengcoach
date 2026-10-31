@@ -198,11 +198,13 @@ def build_local_cards(group, area_slug, area_name, items):
 
 def build_city_page(province_name, short_name, group, area_name, area_slug, items):
     cards = build_local_cards(group, area_slug, area_name, items)
+    # 북구·중구처럼 여러 광역시에 같은 이름이 있어 제목에 광역 지역명을 붙인다.
+    title_area = area_name if area_name.startswith(short_name) else f"{short_name} {area_name}"
     return (
         '<!doctype html><html lang="ko"><head><meta charset="utf-8">'
         '<meta name="viewport" content="width=device-width,initial-scale=1">'
         f'<meta name="description" content="{province_name} {area_name} 스마트무인자판기 설치 비용과 행정동별 무료 견적 안내">'
-        f'<title>{area_name} 스마트무인자판기 설치 안내 | 더세이브 수행코치</title>'
+        f'<title>{title_area} 무인자판기 설치 안내 | 더세이브 수행코치</title>'
         f'<link rel="canonical" href="https://suhaengcoach.kr/regions/{group}/{area_slug}/">'
         '<link rel="stylesheet" href="../../../installation.css">'
         '<link rel="stylesheet" href="../../../gyeonggi-content.css"></head><body>'
